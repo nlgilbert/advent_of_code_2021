@@ -4,7 +4,7 @@ from os.path import exists
 from typing import List
 
 def load_input(path: str) -> List[int]:
-    '''Loads the input and returns it as a list of (PasswordPolicy, str) tuples'''
+    '''Loads the input and returns it as a list of integers.'''
     if not exists(path):
         raise FileNotFoundError(ENOENT, strerror(ENOENT), path)
     

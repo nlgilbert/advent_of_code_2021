@@ -3,8 +3,8 @@ from os import strerror
 from os.path import exists
 from typing import List, Tuple
 
-def load_input(path: str) -> List[int]:
-    '''Loads the input and returns it as a list of (PasswordPolicy, str) tuples'''
+def load_input(path: str) -> List[str]:
+    '''Loads the input and returns it as a list of instructions.'''
     if not exists(path):
         raise FileNotFoundError(ENOENT, strerror(ENOENT), path)
     
