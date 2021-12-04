@@ -4,9 +4,6 @@ from os.path import exists
 from typing import List, Tuple
 from bingo_board import BingoBoard
 
-import os
-from typing import Optional
-
 def load_input(path: str) -> Tuple[List[int], List[BingoBoard]]:
     '''Loads the input and returns it as a list of called numbers and a list of bingo boards.'''
     if not exists(path):
