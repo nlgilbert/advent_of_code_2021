@@ -47,7 +47,6 @@ def main():
     for vent in vents:
         if vent.is_horizontal() or vent.is_vertical():
             grid = mark_vent(grid, vent)
-    # print(grid)
     print(f'Considering only horizontal and vertical vents, there are {count_at_least(grid, 2)} spots that are at least 2.')
             
     print('')
