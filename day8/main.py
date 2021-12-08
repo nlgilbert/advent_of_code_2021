@@ -1,7 +1,7 @@
 from errno import ENOENT
 from os import strerror
 from os.path import exists
-from typing import List, Tuple
+from typing import Dict, List, Tuple
 
 SEVEN_SEG_MAPPING = {
     'abcefg': 0,
@@ -30,7 +30,7 @@ def load_input(path: str) -> List[Tuple[List[str], List[str]]]:
             sequences.append((digits, value))
         return sequences
 
-def count_1478(sequences):
+def count_1478(sequences: List[Tuple[List[str], List[str]]]) -> int:
     '''Counts the number of occurances of 1, 4, 7, and 8 in the digits of the vlaues.'''
     count = 0
     for _, value in sequences:
@@ -39,27 +39,27 @@ def count_1478(sequences):
                 count += 1
     return count
 
-def find_digit_with_length(digits, length):
+def find_digit_with_length(digits: List[str], length: int) -> str:
     '''Finds the digit with the given number of letters (segments).'''
     for digit in digits:
         if len(digit) == length:
             return digit
 
-def decode_digit(digit, mapping):
+def decode_digit(digit: str, mapping: Dict[str, str]) -> int:
     '''Decodes the digit using the given mapping.'''
     decoded_seven_seg = ''
     for letter in digit:
         decoded_seven_seg += mapping[letter]
     return SEVEN_SEG_MAPPING[''.join(sorted(decoded_seven_seg))]
 
-def decode_value(value, mapping):
+def decode_value(value: List[str], mapping: Dict[str, str]) -> int:
     '''Decodes the 4-digit value using the given mapping.'''
     decoded_value = 0
     for digit in value:
         decoded_value = (10 * decoded_value) + decode_digit(digit, mapping)
     return decoded_value
 
-def decode_seven_seg(digits):
+def decode_seven_seg(digits: List[str]) -> Dict[str, str]:
     '''Uses the 10 unique digits to decode the seven segment display, generating a mapping.'''
     mapping = {}
     letter_counts = {
