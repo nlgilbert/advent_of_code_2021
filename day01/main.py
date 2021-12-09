@@ -23,7 +23,7 @@ def count_increases(data: List[int], span: int = 1) -> int:
 
 def main():
     # Load in the data
-    data = load_input('day1/puzzle_input.txt')
+    data = load_input('day01/puzzle_input.txt')
     
     print('--- Part 1 ---')
     print(f'The depth increases {count_increases(data)} times.')

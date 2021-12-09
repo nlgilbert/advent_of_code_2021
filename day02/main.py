@@ -48,7 +48,7 @@ def apply_steps_with_aim(steps: List[str]) -> Tuple[int, int]:
 
 def main():
     # Load in the data
-    data = load_input('day2/puzzle_input.txt')
+    data = load_input('day02/puzzle_input.txt')
     
     print('--- Part 1 ---')
     pos_h, pos_d = apply_steps_naive(data)

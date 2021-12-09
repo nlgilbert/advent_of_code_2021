@@ -47,7 +47,7 @@ def get_losing_score(called_numbers: List[int], boards: List[BingoBoard]) -> int
 
 def main():
     # Load in the data
-    called_numbers, boards = load_input('day4/puzzle_input.txt')
+    called_numbers, boards = load_input('day04/puzzle_input.txt')
 
     print('--- Part 1 ---')
     print(f'The first board to win gets a score of {get_winning_score(called_numbers, boards)}.')

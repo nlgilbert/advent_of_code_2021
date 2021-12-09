@@ -66,7 +66,7 @@ def get_basin(local_min: Tuple[int, int], height_map: np.ndarray) -> List[Tuple[
 
 def main():
     # Load in the data
-    height_map = load_input('day9/puzzle_input.txt')
+    height_map = load_input('day09/puzzle_input.txt')
 
     print('--- Part 1 ---')
     total_risk_level = 0

@@ -40,7 +40,7 @@ def count_at_least(grid: List[List[int]], at_least: int) -> int:
 
 def main():
     # Load in the data
-    vents = load_input('day5/puzzle_input.txt')
+    vents = load_input('day05/puzzle_input.txt')
     grid = [([0] * 1000) for _ in range(1000)]
 
     print('--- Part 1 ---')

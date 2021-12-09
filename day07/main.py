@@ -35,7 +35,7 @@ def triangle_number(n: int) -> int:
 
 def main():
     # Load in the data
-    crab_positions = load_input('day7/puzzle_input.txt')
+    crab_positions = load_input('day07/puzzle_input.txt')
 
     print('--- Part 1 ---')
     min_fuel = None

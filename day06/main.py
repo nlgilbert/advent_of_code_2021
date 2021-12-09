@@ -26,7 +26,7 @@ def simulate_day(fish_count: List[int]) -> List[int]:
 
 def main():
     # Load in the data
-    fish_count = load_input('day6/puzzle_input.txt')
+    fish_count = load_input('day06/puzzle_input.txt')
 
     print('--- Part 1 ---')
     for day in range(80):

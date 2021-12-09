@@ -64,7 +64,7 @@ def keep_least_common(data: np.ndarray, pos: int) -> np.ndarray:
 
 def main():
     # # Load in the data
-    data = load_input('day3/puzzle_input.txt')
+    data = load_input('day03/puzzle_input.txt')
 
     get_most_common(data)
     

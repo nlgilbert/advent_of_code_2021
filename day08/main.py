@@ -125,7 +125,7 @@ def decode_seven_seg(digits: List[str]) -> Dict[str, str]:
 
 def main():
     # Load in the data
-    sequences = load_input('day8/puzzle_input.txt')
+    sequences = load_input('day08/puzzle_input.txt')
 
     print('--- Part 1 ---')
     print(f'There are {count_1478(sequences)} occurrances of 1, 4, 7, or 8.')
