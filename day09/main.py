@@ -6,7 +6,7 @@ from typing import List, Tuple
 import numpy as np
 
 def load_input(path: str) -> np.ndarray:
-    '''Loads the input and returns it as a list (digits, value) tuples.'''
+    '''Loads the input and returns it as an np.ndarry of ints.'''
     if not exists(path):
         raise FileNotFoundError(ENOENT, strerror(ENOENT), path)
     
