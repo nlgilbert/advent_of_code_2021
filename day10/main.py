@@ -25,7 +25,7 @@ AUTOCOMPLETE_POINT_VALUES = {
 }
 
 def load_input(path: str) -> List[str]:
-    '''Loads the input and returns it as list of lines.'''
+    '''Loads the input and returns it as a list of lines.'''
     if not exists(path):
         raise FileNotFoundError(ENOENT, strerror(ENOENT), path)
     
