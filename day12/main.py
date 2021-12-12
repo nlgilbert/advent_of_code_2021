@@ -51,8 +51,8 @@ def get_num_paths(start: Cave, end: Cave, path: List[Cave], allow_double_small: 
 
 def main():
     # Load in the data
-    caves_by_name = load_input('day12/test_input.txt')
-    # caves_by_name = load_input('day12/puzzle_input.txt')
+    # caves_by_name = load_input('day12/test_input.txt')
+    caves_by_name = load_input('day12/puzzle_input.txt')
 
     print('--- Part 1 ---')
     num_paths = get_num_paths(caves_by_name['start'], caves_by_name['end'], [], False)
