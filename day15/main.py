@@ -2,7 +2,6 @@ from errno import ENOENT
 from os import strerror
 from os.path import exists
 from typing import Dict, List, Tuple
-import heapq as hq
 
 import numpy as np
 
@@ -30,18 +29,6 @@ def get_adjacent_coords(coords: Tuple[int, int], shape: Tuple[int, int]) -> List
         adj_coords.append((row, col + 1))
     
     return adj_coords
-
-def search(m):
-    h,w = np.shape(m)
-    q = [(0,(0,0))]     # risk, starting point
-    while q:
-        risk, (x,y) = hq.heappop(q)
-        if (x,y) == (w-1,h-1):
-            return risk
-        for x,y in [(x,y+1),(x+1,y),(x,y-1),(x-1,y)]:
-            if x >= 0 and x < w and y >= 0 and y < h and m[y][x] >= 0:
-                hq.heappush(q, (risk+(m[y][x] % 9)+1, (x,y)))
-                m[y][x] = -1    # mark as seen
 
 def get_cost_map(grid):
     cost_map = np.zeros_like(grid)
@@ -94,17 +81,17 @@ def main():
     grid = load_input('day15/puzzle_input.txt')
 
     print('--- Part 1 ---')
-    # cost_map = get_cost_map(grid)
-    print(f'The minimum path of the original grid has risk {search(grid - 1)}')
+    cost_map = get_cost_map(grid)
+    print(f'The minimum path of the original grid has risk {cost_map[-1, -1]}')
 
     print('')
 
     print('--- Part 2 ---')
-    expanded_grid = expand_grid(grid)
+    expanded_nodes = expand_grid(grid)
     # for row in expanded_nodes:
     #     print(row)
-    # cost_map = get_cost_map(expanded_nodes)
-    print(f'The minimum path of the extended grid has risk {search(expanded_nodes - 1)}')
+    cost_map = get_cost_map(expanded_nodes)
+    print(f'The minimum path of the extended grid has risk {cost_map[-1, -1]}')
     
 if __name__ == '__main__':
     main()
