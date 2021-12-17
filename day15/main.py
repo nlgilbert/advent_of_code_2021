@@ -1,9 +1,11 @@
 from errno import ENOENT
 from os import strerror
 from os.path import exists
-from typing import Dict, List, Tuple
+from typing import List, Tuple
 
+from heapq import heappop, heappush
 import numpy as np
+from node import Node
 
 def load_input(path: str) -> np.ndarray:
     '''Loads the input and returns it as a grid of risks.'''
@@ -11,8 +13,18 @@ def load_input(path: str) -> np.ndarray:
         raise FileNotFoundError(ENOENT, strerror(ENOENT), path)
     
     with open(path, 'r') as input_file:
-        return np.array([[int(char) for char in line.strip()] for line in input_file])     
+        return np.array([[int(char) for char in line.strip()] for line in input_file])
         
+def convert_to_risk_map(risks: np.ndarray) -> List[List[Node]]:
+    '''Converts a grid of risks into a risk map of Nodes.'''
+    risk_map = []
+    for row in range(risks.shape[0]):
+        map_row = []
+        for col in range(risks.shape[1]):
+            map_row.append(Node((row, col), risks[row, col]))
+        risk_map.append(map_row)
+    return risk_map
+
 def get_adjacent_coords(coords: Tuple[int, int], shape: Tuple[int, int]) -> List[Tuple[int, int]]:
     '''Returns a list of all coordinates adjacent to the given coordinate.'''
     adj_coords = []
@@ -30,68 +42,55 @@ def get_adjacent_coords(coords: Tuple[int, int], shape: Tuple[int, int]) -> List
     
     return adj_coords
 
-def get_cost_map(grid):
-    cost_map = np.zeros_like(grid)
-    for i in range(grid.shape[0]):
-        for j in range(grid.shape[1]):
-            if i == 0 and j == 0:
-                cost_map[i, j] = 0
-            elif i == 0:
-                cost_map[i, j] = cost_map[i, j-1] + grid[i, j]
-            elif j == 0:
-                cost_map[i, j] = cost_map[i-1, j] + grid[i, j]
-            else:
-                cost_map[i, j] = min(cost_map[i-1, j], cost_map[i, j-1]) + grid[i, j]
+def get_min_risk_path(risk_map: List[List[Node]]) -> int:
+    '''Uses Dijkstra's algorithm to compute the risk of the minimum risk path through the risk map.'''
+    start = risk_map[0][0]
+    end = risk_map[-1][-1]
+    height = len(risk_map)
+    width = len(risk_map[0])
+    start.visited = True
+    start.dist = 0
+    queue = [start]
+    while True:
+        node = heappop(queue)
+        if node == end:
+            return node.dist
+        for coords in get_adjacent_coords(node.coords, (height, width)):
+            row, col = coords
+            adj_node = risk_map[row][col]
+            if adj_node.visited:
+                continue
+            adj_node.visited = True
+            adj_node.dist = node.dist + adj_node.risk
+            heappush(queue, adj_node)
 
-    changed = True
-    num_changed = 0
-    while changed:
-        print(f'num_changed = {num_changed}')
-        changed = False
-
-        for i in range(grid.shape[0]):
-            for j in range(grid.shape[1]):
-                adj_coords = get_adjacent_coords((i, j), cost_map.shape)
-                for coords in adj_coords:
-                    new_risk = cost_map[coords] + grid[i, j]
-                    if new_risk < cost_map[i, j]:
-                        cost_map[i, j] = new_risk
-                        changed = True
-
-        num_changed += 1
-    
-    return cost_map
-
-def expand_grid(grid):
-    expanded_grid = []
+def expand_risks(risks: np.ndarray) -> np.ndarray:
+    '''Expands the grid by a factor of 5 as needed for Part 2.'''
+    expanded_risk_map = []
     for tile_row in range(5):
-        for i in range(grid.shape[0]):
+        for i in range(risks.shape[0]):
             row = []
             for tile_col in range(5):
-                for j in range(grid.shape[1]):
-                    risk = ((grid[i, j] + tile_row + tile_col - 1) % 9) + 1
+                for j in range(risks.shape[1]):
+                    risk = ((risks[i, j] + tile_row + tile_col - 1) % 9) + 1
                     row.append(risk)
-            expanded_grid.append(row)
-    return np.array(expanded_grid)
-
+            expanded_risk_map.append(row)
+    return np.array(expanded_risk_map)
 
 def main():
     # Load in the data
-    # grid = load_input('day15/test_input.txt')
-    grid = load_input('day15/puzzle_input.txt')
+    # risk_map = load_input('day15/test_input.txt')
+    risks = load_input('day15/puzzle_input.txt')
 
     print('--- Part 1 ---')
-    cost_map = get_cost_map(grid)
-    print(f'The minimum path of the original grid has risk {cost_map[-1, -1]}')
+    risk_map = convert_to_risk_map(risks)
+    print(f'The minimum path of the original risk_map has risk {get_min_risk_path(risk_map)}')
 
     print('')
 
     print('--- Part 2 ---')
-    expanded_nodes = expand_grid(grid)
-    # for row in expanded_nodes:
-    #     print(row)
-    cost_map = get_cost_map(expanded_nodes)
-    print(f'The minimum path of the extended grid has risk {cost_map[-1, -1]}')
+    risk_map = convert_to_risk_map(expand_risks(risks))
+    print(f'The minimum path of the extended risk_map has risk {get_min_risk_path(risk_map)}')
     
 if __name__ == '__main__':
     main()
