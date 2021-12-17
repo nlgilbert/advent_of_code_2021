@@ -20,6 +20,7 @@ def triangle_number(n: int) -> int:
     return sum(range(n+1))
 
 def get_valid_y_vels(y_range: Tuple[int, int]) -> List[int]:
+    '''Gets a list of all potentailly valid initial y velocities.'''
     y_min, y_max = y_range
     min_y_vel = y_min
     max_y_vel = -y_min - 1
@@ -36,6 +37,7 @@ def get_valid_y_vels(y_range: Tuple[int, int]) -> List[int]:
     return valid_y_vels
 
 def get_valid_x_vels(x_range: Tuple[int, int]) -> List[int]:
+    '''Gets a list of all potentailly valid initial x velocities.'''
     min_x, max_x = x_range
     assert min_x > 0
     assert max_x > 0
@@ -61,6 +63,7 @@ def get_valid_x_vels(x_range: Tuple[int, int]) -> List[int]:
     return valid_x_vels
 
 def get_target_steps_y(initial_y_vel: int, y_range: Tuple[int, int]) -> List[int]:
+    '''Gets the steps during which the y position in in the target range.'''
     min_y, max_y = y_range
     pos_y = 0
     vel_y = initial_y_vel
@@ -75,6 +78,7 @@ def get_target_steps_y(initial_y_vel: int, y_range: Tuple[int, int]) -> List[int
     return target_steps_y
 
 def do_step(position: Tuple[int, int], velocity: Tuple[int, int]) -> Tuple[Tuple[int, int], Tuple[int, int]]:
+    '''Performs a single step on the position and velocity.'''
     pos_x, pos_y = position
     vel_x, vel_y = velocity
     pos_x += vel_x
@@ -87,12 +91,14 @@ def do_step(position: Tuple[int, int], velocity: Tuple[int, int]) -> Tuple[Tuple
     return (pos_x, pos_y), (vel_x, vel_y)
 
 def is_in_target(position: Tuple[int, int], x_range: Tuple[int, int], y_range: Tuple[int, int]) -> bool:
+    '''Checks if the position falls in the target.'''
     pos_x, pos_y = position
     min_x, max_x = x_range
     min_y, max_y = y_range
     return (min_x <= pos_x <= max_x) and (min_y <= pos_y <= max_y)
 
 def get_valid_vels(x_range: Tuple[int, int], y_range: Tuple[int, int]) -> List[Tuple[int, int]]:
+    '''Gets a list of all valid initial velicities.'''
     valid_y_vels = get_valid_y_vels(y_range)
     valid_x_vels = get_valid_x_vels(x_range)
     valid_vels = []
