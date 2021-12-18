@@ -5,7 +5,7 @@ from typing import List, Tuple
 import re
 
 def load_input(path: str) -> None:
-    '''Loads the input and returns it as a grid of risks.'''
+    '''Loads the input and returns it as the x and y ranges of the target area.'''
     if not exists(path):
         raise FileNotFoundError(ENOENT, strerror(ENOENT), path)
     

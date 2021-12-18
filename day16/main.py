@@ -24,7 +24,7 @@ hex_to_bin = {
 }
 
 def load_input(path: str) -> Packet:
-    '''Loads the input and returns it as a grid of risks.'''
+    '''Loads the input and returns it as a Packet.'''
     if not exists(path):
         raise FileNotFoundError(ENOENT, strerror(ENOENT), path)
     
