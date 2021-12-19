@@ -1,11 +1,5 @@
 from dataclasses import dataclass
-
-def get_num_overlaps(beacons_1, beacons_2):
-    num_overlaps = 0
-    for beacon in beacons_1:
-        if beacon in beacons_2:
-            num_overlaps += 1
-    return num_overlaps
+from typing import Any, List, Tuple
 
 @dataclass
 class Beacon:
@@ -13,13 +7,15 @@ class Beacon:
     y: int
     z: int
 
-    def translate(self, translation):
+    def translate(self, translation: Tuple[int, int, int]):
+        '''Applies the given translation to the beacon.'''
         self.x += translation[0]
         self.y += translation[1]
         self.z += translation[2]
         return self
 
-    def rotate(self, rotation):
+    def rotate(self, rotation: Tuple[int, int, int]):
+        '''Applies the given rotation to the beacon.'''
         assert rotation[0] in [-90, 0, 90, 180]
         assert rotation[1] in [-90, 0, 90, 180]
         assert rotation[2] in [-90, 0, 90, 180]
@@ -53,12 +49,13 @@ class Beacon:
 
 class Scanner:
 
-    def __init__(self, beacons):
+    def __init__(self, beacons: List[Beacon]):
         self.beacons = beacons
         self.translation = None
         self.rotation = None
     
-    def get_transformed_beacons(self, translation, rotation):
+    def get_transformed_beacons(self, translation: Tuple[int, int, int], rotation: Tuple[int, int, int]) -> List[Beacon]:
+        '''Applies the given rotation then translation to the beacons.'''
         transformed_beacons = []
         for beacon in self.beacons[:]:
             new_beacon = Beacon(beacon.x, beacon.y, beacon.z)
@@ -67,12 +64,14 @@ class Scanner:
             transformed_beacons.append(new_beacon)
         return transformed_beacons
     
-    def set_transformation(self, translation, rotation):
+    def set_transformation(self, translation: Tuple[int, int, int], rotation: Tuple[int, int, int]) -> None:
+        '''Sets the translation and rotation for the scanner.'''
         self.beacons = self.get_transformed_beacons(translation, rotation)
         self.translation = translation
         self.rotation = rotation
 
-    def try_align(self, reference):
+    def try_align(self, reference: Any) -> bool:
+        '''Attempts to align this scanner to the given reference scanner, returning whether or not is was successful.'''
         rotations = []
         for rot_x in [-90, 0, 90, 180]:
             for rot_y in [-90, 0, 90, 180]:
@@ -96,24 +95,10 @@ class Scanner:
                         return True
         return False
 
-def main():
-    scanner = Scanner([Beacon(1, 2, 3), Beacon(1, 1, 1)])
-    # print(Beacon(1, 2, 3) in beacons_1)
-    # print(Beacon(2, 3, 4).translate((-1, -1, -1)))
-    # print(Beacon(2, 3, 4).translate((-1, -1, -1)) in scanner.beacons)
-    # print(Beacon(1, 2, 3).rotate((0, 180, 90)))
-    # print(scanner.get_transformed_beacons((-10, 0, 0), (0, 180, 90)))
-    ref_beacon = Beacon(-6, 3, 8)
-    beacon = Beacon(1, 1, 1).rotate((0, 180, 90))
-    print(beacon)
-    translation = (
-        ref_beacon.x - beacon.x,
-        ref_beacon.y - beacon.y,
-        ref_beacon.z - beacon.z
-    )
-    print(scanner.get_transformed_beacons(translation, (0, 180, 90)))
-    print(scanner.beacons)
-
-
-if __name__ == '__main__':
-    main()
+def get_num_overlaps(beacons_1: Beacon, beacons_2: Beacon) -> int:
+    '''Counts the number of beacons contained in both lists of beacons.'''
+    num_overlaps = 0
+    for beacon in beacons_1:
+        if beacon in beacons_2:
+            num_overlaps += 1
+    return num_overlaps
