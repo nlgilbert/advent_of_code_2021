@@ -3,30 +3,10 @@ from os import strerror
 from os.path import exists
 from typing import List, Tuple
 
-class Die:
+from dirac import Die, Player
 
-    def __init__(self, size):
-        self.size = size
-        self.num_rolls = 0
-    
-    def roll(self):
-        value = (self.num_rolls % self.size) + 1
-        self.num_rolls += 1
-        return value
-
-class Player:
-
-    def __init__(self, starting_position, starting_points = 0):
-        self.position = starting_position
-        self.points = starting_points
-    
-    def move(self, spaces):
-        self.position += spaces
-        self.position = ((self.position - 1) % 10) + 1
-        self.points += self.position
-
-def load_input(path: str) -> Tuple[str, List[str]]:
-    '''Loads the input and returns it as a cipher and an image with 60 pixels of padding.'''
+def load_input(path: str) -> List[Player]:
+    '''Loads the input and returns it as a list of players.'''
     if not exists(path):
         raise FileNotFoundError(ENOENT, strerror(ENOENT), path)
     
@@ -36,7 +16,9 @@ def load_input(path: str) -> Tuple[str, List[str]]:
             players.append(Player(int(line.split()[-1])))
     return players
 
-def play_game(players, end_score):
+def play_game(players: List[Player], end_score: int) -> int:
+    '''Plays a game of Dirac Dice with a deterministic D100.
+    Returns the product of the loser's score and the number of dice rolls.'''
     die = Die(100)
     while True:
         player = players.pop(0)
@@ -49,28 +31,47 @@ def play_game(players, end_score):
             return loser.points * die.num_rolls
         players.append(player)
 
-def play_quantum_game(players, end_score, roll_value, roll_count, player_turn):
-    player = players[player_turn]
-    if roll_count == 3:
-        player.move(roll_value)
-        if player.points >= end_score:
-            if player_turn == 0:
-                return (1, 0)
-            return (0, 1)
-        roll_count = 0
-        roll_value = 0
-        player_turn = (player_turn + 1) % 2
-        player = players[player_turn]
-    win_counts_list = []
-    for value in range(1, 4):
-        players_copy = [
-            Player(players[0].position, players[0].points),
-            Player(players[1].position, players[1].points)
-        ]
-        win_counts_list.append(play_quantum_game(players_copy, end_score, roll_value + value, roll_count + 1, player_turn))
-    win_count_p1 = sum([win_counts[0] for win_counts in win_counts_list])
-    win_count_p2 = sum([win_counts[1] for win_counts in win_counts_list])
-    return (win_count_p1, win_count_p2)
+def as_key(players: List[Player], turn: int) -> str:
+    '''Returns a string representation of the current game state.'''
+    return f'{players[0].as_key()},{players[1].as_key()},{turn}'
+
+def from_key(key: str) -> Tuple[List[Player], int]:
+    '''Returns a game state by decoding the given key.'''
+    values = [int(value) for value in key.split(',')]
+    return [Player(*values[0:2]), Player(*values[2:4])], values[4]
+
+def play_quantum_game(players: List[Player], end_score: int) -> List[int]:
+    '''Plays a game of Dirac Dice with a quantum D3.
+    Returns the number of universes in which each player wins.'''
+    # Generate a list of the number of roll combinations to move each possible number of spaces
+    spaces_combos = {}
+    for roll_1 in range(1, 4):
+        for roll_2 in range(1, 4):
+            for roll_3 in range(1, 4):
+                total_roll = roll_1 + roll_2 + roll_3
+                spaces_combos[total_roll] = spaces_combos.get(total_roll, 0) + 1
+    
+    # Keep track of how many universes exist for a given game state
+    universe_counts = {as_key(players, 0): 1}
+    win_counts = [0, 0]
+    while len(universe_counts) > 0:
+        next_universe_counts = {}
+        for key, u_count in universe_counts.items():
+            for spaces, combos in spaces_combos.items():
+                # Play a turn in this game state
+                local_players, turn = from_key(key)
+                local_players[turn].move(spaces)
+                updated_u_count = u_count * combos
+                if local_players[turn].points >= end_score:
+                    # Winner!
+                    win_counts[turn] += updated_u_count
+                else:
+                    # Add the game state to the list of game states to run in the next iteration
+                    next_turn = (turn + 1) % 2
+                    next_key = as_key(local_players, next_turn)
+                    next_universe_counts[next_key] = next_universe_counts.get(next_key, 0) + updated_u_count
+        universe_counts = next_universe_counts
+    return win_counts
 
 def main():
     # Load in the data
@@ -81,16 +82,11 @@ def main():
     print(f'Loser points * number of rolls: {play_game(players, 1000)}')
 
     print('')
-    players = load_input('day21/test_input.txt')
-    # players = load_input('day21/puzzle_input.txt')
+    # players = load_input('day21/test_input.txt')
+    players = load_input('day21/puzzle_input.txt')
 
     print('--- Part 2 ---')
-    win_counts = play_quantum_game(players, 21, 0, 1, 0)
-    if win_counts[0] > win_counts[1]:
-        winner = 0
-    else:
-        winner = 1
-    print(f'The winner wins in {win_counts[winner]} universes.')
+    print(f'The overall winner wins in {max(play_quantum_game(players, 21))} universes.')
     
 if __name__ == '__main__':
     main()
