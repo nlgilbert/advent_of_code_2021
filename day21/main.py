@@ -14,7 +14,7 @@ def load_input(path: str) -> List[Player]:
         players = []
         for line in input_file:
             players.append(Player(int(line.split()[-1])))
-    return players
+        return players
 
 def play_game(players: List[Player], end_score: int) -> int:
     '''Plays a game of Dirac Dice with a deterministic D100.
