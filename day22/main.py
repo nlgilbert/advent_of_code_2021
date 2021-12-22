@@ -35,7 +35,7 @@ def num_on_after_reboot(reboot_steps: List[RebootStep], bounds=None) -> int:
         if step.on:
             regions[step.region.as_key()] += 1
 
-    # Count the number of "on" cubes
+    # Compute the number of "on" cubes
     num_on = 0
     for region_key, count in list(regions.items()):
         region = Cuboid(*region_key)
