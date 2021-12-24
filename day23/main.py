@@ -83,7 +83,6 @@ def main():
 
     print('--- Part 2 ---')
     print(f'Minimum energy to organize unfolded: {get_min_energy_to_organize(burrow)}')
-    print(f'')
     
 if __name__ == '__main__':
     main()
