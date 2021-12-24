@@ -1,7 +1,7 @@
 from errno import ENOENT
 from os import strerror
 from os.path import exists
-from typing import List
+from typing import List, Tuple
 
 REG_IDX = {
     'w': 0,
@@ -10,20 +10,22 @@ REG_IDX = {
     'z': 3
 }
 
-def load_input(path: str) -> None:
-    '''Loads the input and returns it as a burrow.'''
+def load_input(path: str) -> List[str]:
+    '''Loads the input and returns it as a list of instructions.'''
     if not exists(path):
         raise FileNotFoundError(ENOENT, strerror(ENOENT), path)
     
     with open(path, 'r') as input_file:
         return [line.strip() for line in input_file]
 
-def get_b_val(b, regs):
+def get_b_val(b: str, regs: List[int]) -> int:
+    '''Gets the value of b, either a register value or an immediate value.'''
     if b in 'wxyz':
         return regs[REG_IDX[b]]
     return int(b)
 
-def process_instruction(instruction, regs, input_str):
+def process_instruction(instruction: str, regs: List[int], input_str: str) -> Tuple[List[int], str]:
+    '''Processes a single instruction, returning the new reg values and the remaining input string.'''
     tokens = instruction.split(' ')
     if tokens[0] == 'inp':
         a = tokens[1]
@@ -66,7 +68,8 @@ def process_instruction(instruction, regs, input_str):
         assert False
     return regs, input_str
 
-def run_program(instructions, input_str):
+def run_program(instructions: List[str], input_str: str) -> List[int]:
+    '''Runs a program (list of instructions), returning the final register values.'''
     regs = [0, 0, 0, 0]
     for instruction in instructions:
         regs, input_str = process_instruction(instruction, regs, input_str)
@@ -74,10 +77,10 @@ def run_program(instructions, input_str):
 
 def main():
     # Load in the data
-    # monad = load_input('day24/test_input.txt')
     monad = load_input('day24/puzzle_input.txt')
 
     print('--- Part 1 ---')
+    # Verify the answer to Part 1
     model_number = 91699394894995
     assert run_program(monad, f'{model_number:014}')[REG_IDX['z']] == 0
     print(f'Largest valid model number: {model_number}')
@@ -85,6 +88,7 @@ def main():
     print('')
 
     print('--- Part 2 ---')
+    # Verify the answer to Part 2
     model_number = 51147191161261
     assert run_program(monad, f'{model_number:014}')[REG_IDX['z']] == 0
     print(f'Smallest valid model number: {model_number}')
