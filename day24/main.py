@@ -92,7 +92,6 @@ def main():
     model_number = 51147191161261
     assert run_program(monad, f'{model_number:014}')[REG_IDX['z']] == 0
     print(f'Smallest valid model number: {model_number}')
-    print(f'')
     
 if __name__ == '__main__':
     main()
