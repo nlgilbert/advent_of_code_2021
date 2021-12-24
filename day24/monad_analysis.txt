@@ -1,0 +1,260 @@
+# Input 0
+inp w     # i[0], 0, 0, 0
+add x 13  # i[0], 13, 0, 0
+eql x w   # i[0], 0, 0, 0
+eql x 0   # i[0], 1, 0, 0
+add y w   # i[0], 1, i[0], 0
+add y 3   # i[0], 1, i[0]+3, 0
+add z y   # i[0], 1, i[0]+3, i[0]+3
+
+# Input 1
+inp w     # i[1], 1, i[0]+3, i[0]+3
+mul x 0   # i[1], 0, i[0]+3, i[0]+3
+add x z   # i[1], i[0]+3, i[0]+3, i[0]+3
+add x 11  # i[1], i[0]+14, i[0]+3, i[0]+3
+eql x w   # i[1], 0, i[0]+3, i[0]+3
+eql x 0   # i[1], 1, i[0]+3, i[0]+3
+mul y 0   # i[1], 1, 0, i[0]+3
+add y 25  # i[1], 1, 25, i[0]+3
+add y 1   # i[1], 1, 26, i[0]+3
+mul z y   # i[1], 1, 26, 26i[0]+78
+mul y 0   # i[1], 1, 0, 26i[0]+78
+add y w   # i[1], 1, i[1], 26i[0]+78
+add y 12  # i[1], 1, i[1]+12, 26i[0]+78
+add z y   # i[1], 1, i[1]+12, 26i[0]+i[1]+90
+
+# Input 2
+inp w     # i[2], 1, i[1]+12, 26i[0]+i[1]+90
+mul x 0   # i[2], 0, i[1]+12, 26i[0]+i[1]+90
+add x z   # i[2], 26i[0]+i[1]+90, i[1]+12, 26i[0]+i[1]+90
+mod x 26  # i[2], i[1]+12, i[1]+12, 26i[0]+i[1]+90
+add x 15  # i[2], i[1]+27, i[1]+12, 26i[0]+i[1]+90
+eql x w   # i[2], 0, i[1]+12, 26i[0]+i[1]+90
+eql x 0   # i[2], 1, i[1]+12, 26i[0]+i[1]+90
+mul y 0   # i[2], 1, 0, 26i[0]+i[1]+90
+add y 25  # i[2], 1, 25, 26i[0]+i[1]+90
+add y 1   # i[2], 1, 26, 26i[0]+i[1]+90
+mul z y   # i[2], 1, 26, (26^2)i[0]+26i[1]+2340
+mul y 0   # i[2], 1, 0, (26^2)i[0]+26i[1]+2340
+add y w   # i[2], 1, i[2], (26^2)i[0]+26i[1]+2340
+add y 9   # i[2], 1, i[2]+9, (26^2)i[0]+26i[1]+2340
+mul y x   # i[2], 1, i[2]+9, (26^2)i[0]+26i[1]+2340   NO CHANGE
+add z y   # i[2], 1, i[2]+9, (26^2)i[0]+26i[1]+i[2]+2349
+
+# Input 3
+inp w     # i[3], 1, i[2]+9, (26^2)i[0]+26i[1]+i[2]+2349
+mul x 0   # i[3], 0, i[2]+9, (26^2)i[0]+26i[1]+i[2]+2349
+add x z   # i[3], (26^2)i[0]+26i[1]+i[2]+2349, i[2]+9, (26^2)i[0]+26i[1]+i[2]+2349
+mod x 26  # i[3], i[2]+9, i[2]+9, (26^2)i[0]+26i[1]+i[2]+2349
+div z 26  # i[3], i[2]+9, i[2]+9, 26i[0]+i[1]+90
+add x -6  # i[3], i[2]+3, i[2]+9, 26i[0]+i[1]+90
+eql x w   # i[3], A, i[2]+9, 26i[0]+i[1]+90
+eql x 0   # i[3], ~A, i[2]+9, 26i[0]+i[1]+90
+mul y 0   # i[3], ~A, 0, 26i[0]+i[1]+90
+add y 25  ...
+mul y x   ...
+add y 1   # i[3], ~A, A?1:26, 26i[0]+i[1]+90
+mul z y   # i[3], ~A, A?1:26, (26i[0]+i[1]+90)*(A?1:26)
+mul y 0   ...
+add y w   ...
+add y 12  # i[3], ~A, i[3]+12, (26i[0]+i[1]+90)*(A?1:26)
+mul y x   # i[3], ~A, A?0:i[3]+12, (26i[0]+i[1]+90)*(A?1:26)
+add z y   # i[3], ~A, A?0:i[3]+12, z
+
+# Input 4
+inp w     # i[4], "", "", z
+mul x 0   ...
+add x z   ...
+mod x 26  # i[4], z%26, "", z
+add x 15  # i[4], (z%26)+15, "", z
+eql x w   # i[4], 0, "", z
+eql x 0   # i[4], 1, "", z
+mul y 0   # i[4], 1, 0, z
+add y 25  ...
+mul y x   ...
+add y 1   # i[4], 1, 26, z
+mul z y   # i[4], 1, 26, z
+mul y 0   ...
+add y w   ...
+add y 2   # i[4], 1, i[4]+2, z
+mul y x   # i[4], 1, i[4]+2, z   NO CHANGE
+add z y   # i[4], 1, i[4]+2, z
+
+# Input 5
+inp w     # i[5], "", "", z
+mul x 0   ...
+add x z   ...
+mod x 26  # i[5], i[4]+2, "", z
+div z 26  # i[5], i[4]+2, "", z
+add x -8  # i[5], i[4]-6, "", z
+eql x w   # i[5], B, "", z
+eql x 0   # i[5], ~B, "", z
+mul y 0   # i[5], ~B, 0, z
+add y 25  ...
+mul y x   ...
+add y 1   # i[5], ~B, B?1:26, z
+mul z y   # i[5], ~B, B?1:26, z*(B?1:26)
+mul y 0   ...
+add y w   ...
+add y 1   # i[5], ~B, B?0:i[5]+1, z*(B?1:26)
+mul y x   # i[5], ~B, B?0:i[5]+1, z*(B?1:26)
+add z y   # i[5], ~B, B?0:i[5]+1, z
+
+# Input 6
+inp w     # i[6], "", "", z
+mul x 0   ...
+add x z   ...
+mod x 26  # i[6], z%26, "", z
+div z 26  # i[6], z%26, "", z
+add x -4  # i[6], z%26-4, "", z
+eql x w   # i[6], C, "", z
+eql x 0   # i[6], ~C, "", z
+mul y 0   ...
+add y 25  ...
+mul y x   ...
+add y 1   ...
+mul z y   ...
+mul y 0   ...
+add y w   ...
+add y 1   ...
+mul y x   ...
+add z y   ...
+
+# Input 7
+inp w     # i[7], "", "", z
+mul x 0   ...
+add x z   ...
+mod x 26  # i[7], z%26, "", z
+div z 1   # i[7], z%26, "", z   NO CHANGE
+add x 15  # i[7], z%26+15, "", z
+eql x w   # i[7], 0, "", z
+eql x 0   # i[7], 1, "", z
+mul y 0   ...
+add y 25  ...
+mul y x   ...
+add y 1   # i[7], 1, 26, z
+mul z y   # i[7], 1, 26, z
+mul y 0   ...
+add y w   ...
+add y 13  # i[7], 1, i[7]+13, z
+mul y x   # i[7], 1, i[7]+13, z   NO CHANGE
+add z y   # i[7], 1, i[7]+13, z
+
+# Input 8
+inp w     # i[8], "", "", z
+mul x 0   ...
+add x z   ...
+mod x 26  # i[8], i[7]+13, "", z
+div z 1   # i[8], i[7]+13, "", z  NO CHANGE
+add x 10  # i[8], i[7]+23, "", z
+eql x w   # i[8], 0, "", z
+eql x 0   # i[8], 1, "", z
+mul y 0   ...
+add y 25  ...
+mul y x   ...
+add y 1   # i[8], 1, 26, z
+mul z y   # i[8], 1, 26, z
+mul y 0
+add y w
+add y 1
+mul y x
+add z y
+
+# Input 9
+inp w     # i[9], "", "", z
+mul x 0   ...
+add x z   ...
+mod x 26  # i[9], i[8]+1, "", z
+add x 11  # i[9], i[8]+12, "", z
+eql x w   # i[9], 0, "", z
+eql x 0   # i[9], 1, "", z
+mul y 0   ...
+add y 25  ...
+mul y x   ...
+add y 1   # i[9], 1, 26, z
+mul z y
+mul y 0
+add y w
+add y 6
+mul y x
+add z y
+
+# Input 10
+inp w     # i[10], "", "", z
+mul x 0   ...
+add x z   ...
+mod x 26  # i[10], i[9]+6, "", z
+div z 26  # i[10], i[9]+6, "", z
+add x -11 # i[10], i[9]-5, "", z
+eql x w   # i[10], D, "", z
+eql x 0   # i[10], ~D, "", z
+mul y 0
+add y 25
+mul y x
+add y 1
+mul z y
+mul y 0
+add y w
+add y 2
+mul y x
+add z y
+
+# Input 11
+inp w     # i[11], "", "", z
+mul x 0   ...
+add x z   ...
+mod x 26  # i[11], cmp_2, "", z
+div z 26  # i[11], cmp_2, "", z
+add x 0   # i[11], cmp_2, "", z   NO CHANGE
+eql x w   # i[11], E, "", z
+eql x 0   # i[11], ~E, "", z
+mul y 0
+add y 25
+mul y x
+add y 1
+mul z y
+mul y 0
+add y w
+add y 11
+mul y x
+add z y
+
+# Input 12
+inp w     # i[12], "", "", z
+mul x 0   ...
+add x z   ...
+mod x 26  # i[12], cmp_3, "", z
+div z 26  # i[12], cmp_3, "", z
+add x -8  # i[12], cmp_3-8, "", z
+eql x w   # i[12], F, "", z
+eql x 0   # i[12], ~F, "", z
+mul y 0
+add y 25
+mul y x
+add y 1
+mul z y
+mul y 0
+add y w
+add y 10
+mul y x
+add z y
+
+# Input
+inp w   
+mul x 0
+add x z
+mod x 26
+div z 26
+add x -7
+eql x w
+eql x 0
+mul y 0
+add y 25
+mul y x
+add y 1
+mul z y
+mul y 0
+add y w
+add y 3
+mul y x
+add z y

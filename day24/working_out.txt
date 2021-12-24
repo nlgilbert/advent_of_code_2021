@@ -1,0 +1,177 @@
+y_adds:
+3,  12, 9,  12, 2,   1,  1, 13, 1,  6,  2,   11, 10, 3
+
+x_adds:
+13, 11, 15, -6, 15, -8, -4, 15, 10, 11, -11, 0,  -8, -7
+
+Conditionals:
+A: i[3] == i[2] + 3
+B: i[5] == i[4] - 6
+C: i[6] == cmp_1 - 4
+D: i[10] == i[9] - 5
+E: i[11] == cmp_2
+F: i[12] == cmp_3 - 8
+G: i[13] == cmp_4 - 7
+
+
+
+z program:
+stack = []
+z = 0
+z += i[0] + 3
+stack.append(i[0] + 3)
+z *= 26
+z += i[1]+12
+stack.append(i[1] + 12)
+if i[3] != i[2] + 3:
+    z = (z*26) + i[3] + 12
+    stack.append(i[3] + 12)
+
+# No change after this part
+z *= 26
+z += i[4] + 2
+stack.append(i[4] + 2)
+z //= 26
+stack.pop()
+
+if i[5] != i[4] - 6:
+    z = (z*26) + i[5] + 1
+    stack.append(i[5] + 1)
+
+z //= 26
+stack.pop()
+
+cmp_1 = stack[-1]
+if i[6] != cmp_1 - 4:
+    z = (z*26) + i[6]+1
+
+z *= 26
+z += i[7] + 13
+stack.append(i[7] + 13)
+z *= 26
+z += i[8] + 1
+stack.append(i[8] + 1)
+
+# No change after this part
+z *= 26
+z += i[9] + 6
+stack.append(i[9] + 6)
+z //= 26
+stack.pop()
+
+cmp_2 = stack[-1]
+if i[10] != i[9] - 5:
+    z = (z*26) + i[10] + 2
+    stack.append(i[10] + 2)
+
+z //= 26
+stack.pop()
+
+cmp_3 = stack[-1]
+if i[11] != cmp_2:
+    z = (z*26) + i[11]+11
+    cmp_3 = i[11]+11
+
+z //= 26
+stack.pop()
+
+cmp_3 = stack[-1]
+if i[12] != cmp_3 - 8:
+    z = (z*26) + i[12]+10
+    cmp_4 = i[12]+10
+
+z //= 26
+stack.pop()
+
+cmp_4 = stack[-1]
+if i[13] != cmp_4 - 7:
+    z = (z*26) + i[13]+3
+
+
+
+For z to equal 0 at the end, we have to meet every conditional
+Let's rewrite it with that in mind
+
+Conditionals:
+A: i[3] == i[2] + 3
+B: i[5] == i[4] - 6
+C: i[6] == i[1] + 8
+D: i[10] == i[9] - 5
+E: i[11] == i[8] + 1
+F: i[12] == i[7] + 5
+G: i[13] == i[0] - 4
+
+
+z = 0
+z += i[0] + 3
+z *= 26
+z += i[1] + 12
+if i[3] != i[2] + 3:
+    return False
+
+# No change after this part
+z *= 26
+z += i[4] + 2
+z //= 26
+
+if i[5] != i[4]-6:
+    return False
+
+z //= 26
+
+if i[6] != i[1]+8:
+    return False
+
+z *= 26
+z += i[7] + 13
+z *= 26
+z += i[8] + 1
+cmp_4 = i[7] + 13
+
+# No change after this part
+z *= 26
+z += i[9] + 6
+z //= 26
+
+cmp_2 = i[8]+1
+if i[10] != i[9] - 5:
+    return False
+
+z //= 26
+
+if i[11] != i[8]+1:
+    return False
+
+z //= 26
+if i[12] != i[7] + 5:
+    return False
+
+z //= 26
+if i[13] != i[0] - 4:
+    return False
+
+return True
+
+
+All the following conditionals must be met for a valid model number:
+A: i[3] == i[2] + 3
+B: i[5] == i[4] - 6
+C: i[6] == i[1] + 8
+D: i[10] == i[9] - 5
+E: i[11] == i[8] + 1
+F: i[12] == i[7] + 5
+G: i[13] == i[0] - 4
+
+
+Largest valid model number:
+          1111
+01234567890123
+--------------
+91699394894995
+
+
+Smallest valid model number (no zeros):
+          1111
+01234567890123
+--------------
+51147191161261
