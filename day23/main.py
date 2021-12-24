@@ -1,7 +1,6 @@
 from errno import ENOENT
 from os import strerror
 from os.path import exists
-from typing import List
 from heapq import heappop, heappush
 
 from burrow import Burrow, Node
