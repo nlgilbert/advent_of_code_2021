@@ -68,11 +68,6 @@ def get_min_energy_to_organize(burrow: Burrow) -> int:
             burrow_energy[next_burrow_str] = next_node.energy
             burrow_history[next_burrow_str] = next_history
             heappush(to_visit, next_node)
-
-def print_burrow(burrow):
-    for line in burrow:
-        print(line)
-    print('')
     
 def main():
     # Load in the data
@@ -87,7 +82,6 @@ def main():
     burrow.layout.insert(4, '  #D#B#A#C#')
 
     print('--- Part 2 ---')
-    # print_burrow(burrow)
     print(f'Minimum energy to organize unfolded: {get_min_energy_to_organize(burrow)}')
     print(f'')
     
